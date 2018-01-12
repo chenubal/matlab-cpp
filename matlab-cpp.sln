@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "circleMask", "circleMask\circleMask.vcxproj", "{46346877-2DDA-4187-B1F2-ADDD97FC18F1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ellipseMask", "ellipseMask\ellipseMask.vcxproj", "{9D3C7FB5-0018-482A-8A5F-C0FC58E3453B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{46346877-2DDA-4187-B1F2-ADDD97FC18F1}.Release|x64.Build.0 = Release|x64
 		{46346877-2DDA-4187-B1F2-ADDD97FC18F1}.Release|x86.ActiveCfg = Release|Win32
 		{46346877-2DDA-4187-B1F2-ADDD97FC18F1}.Release|x86.Build.0 = Release|Win32
+		{9D3C7FB5-0018-482A-8A5F-C0FC58E3453B}.Debug|x64.ActiveCfg = Debug|x64
+		{9D3C7FB5-0018-482A-8A5F-C0FC58E3453B}.Debug|x64.Build.0 = Debug|x64
+		{9D3C7FB5-0018-482A-8A5F-C0FC58E3453B}.Debug|x86.ActiveCfg = Debug|Win32
+		{9D3C7FB5-0018-482A-8A5F-C0FC58E3453B}.Debug|x86.Build.0 = Debug|Win32
+		{9D3C7FB5-0018-482A-8A5F-C0FC58E3453B}.Release|x64.ActiveCfg = Release|x64
+		{9D3C7FB5-0018-482A-8A5F-C0FC58E3453B}.Release|x64.Build.0 = Release|x64
+		{9D3C7FB5-0018-482A-8A5F-C0FC58E3453B}.Release|x86.ActiveCfg = Release|Win32
+		{9D3C7FB5-0018-482A-8A5F-C0FC58E3453B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,22 +1,27 @@
 #include <math.h>
 #include "mex.h"
-#include <string>
+#include <sstream>
 #include "../Tools/geometry.h"
 
 bool checkargs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 {
+	auto fname = mexFunctionName();
 	if (nrhs == 0)
 	{
-		mexPrintf("Usage A = %s(rows,cols,centerX,centerY,radius)\n", mexFunctionName()); return false;
+		std::stringstream ss("Function");
+		ss << "Function " << fname << "(from " << __DATE__ << ")\n";
+		ss << "Usage A = " << fname << "(rows,cols,centerX,centerY,radius);\n";
+		mexPrintf(ss.str().c_str()); 
+		return false;
 	}
 	if (nrhs < 5)
 	{
-		std::string tag("MATLAB:"); tag += mexFunctionName();
+		std::string tag("MATLAB:"); tag += fname;
 		mexErrMsgIdAndTxt(tag.c_str(), "needs at least five arguments!");
 	}
 	for (size_t i = 0; i < 5; i++)
 	{
-		std::string tag("MATLAB:"); tag += mexFunctionName();
+		std::string tag("MATLAB:"); tag += fname;
 		std::string msg("Invalid argument "); msg += std::to_string(i + 1) + ": must be numeric!";
 		if (!mxIsNumeric(prhs[i])) mexErrMsgIdAndTxt(tag.c_str(), msg.c_str());
 	}

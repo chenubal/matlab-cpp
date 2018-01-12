@@ -1,0 +1,15 @@
+MEXEXT = mexw64
+MEXPATH = C:\Program Files\MATLAB\R2015a\extern
+
+CFLAGS = /GS /GL /W3 /Gy /Zc:wchar_t /Gm- /O2 /fp:precise /Zc:forScope /Gd /Oi /MD  /EHsc /nologo /I"$(MEXPATH)\include" 
+
+LFLAGS = /DLL /MACHINE:X64 /export:mexFunction /LIBPATH:"$(MEXPATH)\lib\win64\microsoft" libmex.lib libmx.lib 
+
+all: maskCircle 
+	
+maskCircle:
+	cl  $(CFLAGS) main.cpp /link $(LFLAGS) /OUT:"main.$(MEXEXT)" 
+
+
+clean:
+ 	del *.exe *.obj *.$(MEXEXT)
