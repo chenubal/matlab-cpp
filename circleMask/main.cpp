@@ -3,7 +3,7 @@
 #include <sstream>
 #include "../Tools/geometry.h"
 
-bool checkargs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
+bool checkArgs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 {
 	auto fname = mexFunctionName();
 	if (nrhs == 0)
@@ -30,7 +30,7 @@ bool checkargs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 {
-	if (!checkargs(nlhs, plhs, nrhs, prhs)) return;
+	if (!checkArgs(nlhs, plhs, nrhs, prhs)) return;
 	// Create boolean 2D array
 	mwSize dims[2] = { mwSize(mxGetPr(prhs[0])[0]), mwSize(mxGetPr(prhs[1])[0]) };
 	plhs[0] = mxCreateNumericArray(2, dims, mxLOGICAL_CLASS, mxREAL);

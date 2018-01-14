@@ -4,12 +4,26 @@
 
 namespace JH
 {
+	template<class T>
+	struct arrayProxy
+	{
+		arrayProxy() = delete;
+		arrayProxy(T* pData, size_t n) : data(pData), size(n) {}
+		T* begin() { return data; }
+		T* end() { return data+size; }
+		T *data;
+		size_t size;
+	};
+	template<class T > 
+	arrayProxy<T> makeProxy(T* pData, size_t n) { return arrayProxy<T>((T*)pData, n); }
+
 	template<class T=double, int M=0>
 	T CellValue(mxArray const* pArray, mwSize n) { return T(mxGetPr(mxGetCell(pArray, n))[M]); }
 }
-mxArray* checkargs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
+
+mxArray* checkArgs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 {
-	using namespace JH;
+	using JH::CellValue;
 	mxArray *result = nullptr;
 	if (nrhs == 3)
 	{
@@ -27,10 +41,27 @@ mxArray* checkargs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 	return result;
 }
 
+JH::Ellipse createEllipse( const mxArray*prhs[])
+{
+	using JH::CellValue;
+	auto ra = CellValue<>(prhs[2], 0), rb = CellValue<>(prhs[2], 1);
+	return JH::Ellipse({ CellValue<>(prhs[1], 0), CellValue<>(prhs[1], 1) }, ra, rb);
+}
+
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 {
-	if (auto work = checkargs(nlhs, plhs, nrhs, prhs))
+	if (auto work = checkArgs(nlhs, plhs, nrhs, prhs))
 	{
+		using JH::CellValue;
+		auto ellipse = createEllipse(prhs);
+		auto numRows = CellValue<mwSize>(prhs[0], 0);
+		auto numData = numRows * CellValue<mwSize>(prhs[0], 1);
+		auto i = 0UL;
+		for (auto &x : JH::makeProxy((bool*)mxGetData(work),numData))
+		{
+			x = ellipse.includes({ double(i % numRows), double(i / numRows) });
+			i++;
+		}
 		plhs[0] = work;
 	}
 	else
