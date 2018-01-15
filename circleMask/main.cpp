@@ -43,6 +43,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 	for (auto i = 0; i < dims[0] * dims[1]; i++)
 	{
 		JH::Point P{ double(i % dims[0]), double(i / dims[0]) };
-		data[i] = circle.includes(P);
+		data[i] = circle.contains(P);
 	}
 }

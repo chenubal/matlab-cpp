@@ -24,6 +24,9 @@
   <ItemGroup>
     <None Include="Makefile.win" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Tools\geometry.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9d3c7fb5-0018-482a-8a5f-c0fc58e3453b}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

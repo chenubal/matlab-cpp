@@ -1,41 +1,57 @@
 #pragma once
+#include <algorithm> 
 
 namespace JH
 {
 	struct Point
 	{
+		Point() = delete;
 		const double x, y;
+	};
+
+	struct Rectangle
+	{
+		Rectangle() = delete;
+		Rectangle(Point const& P, Point const&Q) : topLeft{ std::min(P.x,Q.x), std::min(P.y, Q.y) }, bottomRight({ std::max(P.x, Q.x), std::max(P.y, Q.y) }) {}
+		bool contains(Point const& Q) const
+		{
+			return topLeft.x <= Q.x && Q.x <= topLeft.x && topLeft.y <= Q.y && Q.y <= topLeft.y;
+		}
+		double width() const { return bottomRight.x - topLeft.x; }
+		double height() const { return bottomRight.y - topLeft.y; }
+	private:
+		const Point topLeft,bottomRight;
 	};
 
 	struct Circle
 	{
 		Circle() = delete;
-		Circle(Point const& Q, double r) : S(Q), r2(r*r) {}
-		bool includes(Point const& Q)
+		Circle(Point const& Q, double r) : center(Q), radiusSqr(r*r) {}
+		bool contains(Point const& Q) const
 		{
-			auto dx = S.x - Q.x;
-			auto dy = S.y - Q.y;
-			return (dx*dx + dy*dy) <= r2;
+			auto dx = center.x - Q.x;
+			auto dy = center.y - Q.y;
+			return (dx*dx + dy*dy) <= radiusSqr;
 		}
-		double radius() { return sqrt(r2); }
+		double radius() const { return sqrt(radiusSqr); }
 	private:
-		const double r2;
-		const Point S;
+		const double radiusSqr;
+		const Point center;
 	};
 
 	struct Ellipse
 	{
 		Ellipse() = delete;
-		Ellipse(Point const& Q, double _ra, double _rb) : S(Q), ra(_ra), rb(_rb) { if (ra <= 0.0 || rb <= 0.0) throw "invalid radii"; }
-		bool includes(Point const& Q)
+		Ellipse(Point const& Q, double ra, double rb) : center(Q), radiusA(ra), radiusB(rb) { if (radiusA <= 0.0 || radiusB <= 0.0) throw "invalid radii"; }
+		bool contains(Point const& Q) const
 		{
-			auto dx = (S.x - Q.x)/ra;
-			auto dy = (S.y - Q.y)/rb;
+			auto dx = (center.x - Q.x)/ radiusA;
+			auto dy = (center.y - Q.y)/ radiusB;
 			return (dx*dx + dy*dy) <= 1.0;
 		}
 	private:
-		const double ra,rb;
-		const Point S;
+		const double radiusA,radiusB;
+		const Point center;
 	};
 
 }

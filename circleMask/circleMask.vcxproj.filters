@@ -6,4 +6,7 @@
   <ItemGroup>
     <None Include="Makefile.win" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Tools\geometry.h" />
+  </ItemGroup>
 </Project>

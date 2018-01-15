@@ -1,6 +1,7 @@
 #include <math.h>
 #include "mex.h"
 #include "../Tools/geometry.h"
+#include <vector>
 
 namespace JH
 {
@@ -25,6 +26,8 @@ mxArray* checkArgs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 {
 	using JH::CellValue;
 	mxArray *result = nullptr;
+	std::vector<JH::Point> ps;
+	ps.push_back({ 10,20 });
 	if (nrhs == 3)
 	{
 		auto const S = prhs[0];
@@ -59,7 +62,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 		auto i = 0UL;
 		for (auto &x : JH::makeProxy((bool*)mxGetData(work),numData))
 		{
-			x = ellipse.includes({ double(i % numRows), double(i / numRows) });
+			x = ellipse.contains({ double(i % numRows), double(i / numRows) });
 			i++;
 		}
 		plhs[0] = work;

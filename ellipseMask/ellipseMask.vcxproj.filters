@@ -6,4 +6,7 @@
   <ItemGroup>
     <ClCompile Include="ellipseMask.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Tools\geometry.h" />
+  </ItemGroup>
 </Project>
