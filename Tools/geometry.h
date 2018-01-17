@@ -3,10 +3,23 @@
 
 namespace JH
 {
+
 	struct Point
 	{
 		Point() = delete;
+		Point operator-(Point const& P) const { return { x - P.x, y - P.y }; }
 		const double x, y;
+	};
+
+	template<class T=double>
+	const T pi{ 3.141592653589793238462643};
+
+	struct Rotator
+	{
+		Rotator() = delete;
+		Rotator(double phi): c(cos(phi)), s(sin(phi)) {}
+		Point operator()(Point const& P) const { return { c*P.x - s * P.y, P.x*s + c * P.y }; }
+		const double c, s;
 	};
 
 	struct Rectangle
@@ -26,7 +39,7 @@ namespace JH
 	struct Circle
 	{
 		Circle() = delete;
-		Circle(Point const& Q, double r) : center(Q), radiusSqr(r*r) {}
+		Circle(Point const& Q, double r) : center(Q), radiusSqr(r*r) { if (r <= 0.0) throw "invalid radius"; }
 		bool contains(Point const& Q) const
 		{
 			auto dx = center.x - Q.x;
@@ -42,14 +55,16 @@ namespace JH
 	struct Ellipse
 	{
 		Ellipse() = delete;
-		Ellipse(Point const& Q, double ra, double rb) : center(Q), radiusA(ra), radiusB(rb) { if (radiusA <= 0.0 || radiusB <= 0.0) throw "invalid radii"; }
+		Ellipse(Point const& Q, double ra, double rb, double phi=-pi<>/4.0) : center(Q), radiusA(ra), radiusB(rb), rot(phi) { if (radiusA <= 0.0 || radiusB <= 0.0) throw "invalid radii"; }
 		bool contains(Point const& Q) const
 		{
-			auto dx = (center.x - Q.x)/ radiusA;
-			auto dy = (center.y - Q.y)/ radiusB;
+			auto P = rot(center -Q);
+			auto dx = P.x/ radiusA;
+			auto dy = P.y/ radiusB;
 			return (dx*dx + dy*dy) <= 1.0;
 		}
 	private:
+		Rotator rot;
 		const double radiusA,radiusB;
 		const Point center;
 	};
