@@ -18,8 +18,11 @@ namespace JH
 	template<class T > 
 	arrayProxy<T> makeProxy(T* pData, size_t n) { return arrayProxy<T>((T*)pData, n); }
 
-	template<class T=double, int M=0>
+	template<class T = double, int M = 0>
 	T CellValue(mxArray const* pArray, mwSize n) { return T(mxGetPr(mxGetCell(pArray, n))[M]); }
+
+	template<class T = double, int M = 0>
+	T NumericValue(mxArray const* pArray) { return T(mxGetPr(pArray)[M]); }
 }
 
 mxArray* checkArgs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
@@ -28,7 +31,7 @@ mxArray* checkArgs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 	mxArray *result = nullptr;
 	std::vector<JH::Point> ps;
 	ps.push_back({ 10,20 });
-	if (nrhs == 3)
+	if (nrhs >= 3)
 	{
 		auto const S = prhs[0];
 		auto const P = prhs[1];
@@ -44,11 +47,13 @@ mxArray* checkArgs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 	return result;
 }
 
-JH::Ellipse createEllipse( const mxArray*prhs[])
+JH::Ellipse createEllipse(int nrhs, const mxArray*prhs[])
 {
 	using JH::CellValue;
+	double phi = 0.0;
+	if (nrhs > 3 && mxIsNumeric(prhs[3])) phi = JH::NumericValue<>(prhs[3]);
 	auto ra = CellValue<>(prhs[2], 0), rb = CellValue<>(prhs[2], 1);
-	return JH::Ellipse({ CellValue<>(prhs[1], 0), CellValue<>(prhs[1], 1) }, ra, rb);
+	return JH::Ellipse({ CellValue<>(prhs[1], 0), CellValue<>(prhs[1], 1) }, ra, rb,phi);
 }
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
@@ -56,7 +61,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 	if (auto work = checkArgs(nlhs, plhs, nrhs, prhs))
 	{
 		using JH::CellValue;
-		auto ellipse = createEllipse(prhs);
+		auto ellipse = createEllipse(nrhs,prhs);
 		auto numRows = CellValue<mwSize>(prhs[0], 0);
 		auto numData = numRows * CellValue<mwSize>(prhs[0], 1);
 		auto i = 0UL;
