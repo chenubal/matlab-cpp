@@ -53,6 +53,7 @@ namespace JH
 			return Rectangle(Center, d*rotate.c, d*rotate.s);
 		}
 	};
+
 	struct Circle
 	{
 		const double radiusSqr;
@@ -82,10 +83,12 @@ namespace JH
 		}
 		Rectangle box() const
 		{
-			auto d = std::hypot(radiusX, radiusY);
-			return Rectangle(Center, d*rotate.c, d*rotate.s);
+			auto c2 = rotate.c * rotate.c;
+			auto s2 = rotate.s * rotate.s;
+			auto rx2 = radiusX * radiusX;
+			auto ry2 = radiusY * radiusY;
+			return Rectangle(Center, sqrt(rx2*c2 + ry2 * s2), sqrt(rx2*s2 + ry2 * c2));
 		}
 	};
-
 }
 
