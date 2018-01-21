@@ -10,26 +10,26 @@ namespace JH
 
 		Point() = delete;
 
-		Point operator-(Point const& P) const { return { x - P.x, y - P.y }; }
-		Point operator+(Point const& P) const { return { x + P.x, y + P.y }; }
-		Point operator*(double a) const { return { x *a, y *a }; }
-
-		Point stretch(double a, double b) const { return { x *a, y *b}; }
-		double distSqr() const { return x*x+y*y; }
-		double dist() const { return sqrt(dist()); }
+		double distSqr() const { return x * x + y * y; }
+		double dist() const { return sqrt(distSqr()); }
 	};
 
-	template<class T=double>
-	const T pi{ 3.141592653589793238462643};
+	Point operator-(Point const& P, Point const& Q) { return { P.x - Q.x, P.y - Q.y }; }
+	Point operator+(Point const& P, Point const& Q) { return { P.x + Q.x, P.y + Q.y }; }
+	Point operator*(Point const& P, Point const& Q) { return { P.x * Q.x, P.y * Q.y }; }
+	Point operator*(Point const& P, double a) { return P * Point{a,a}; }
+
+	template<class T = double>
+	const T pi{ 3.141592653589793238462643 };
 
 	struct Rotator
 	{
 		const double c, s;
 
 		Rotator() = delete;
-		Rotator(double phi): c(cos(phi)), s(sin(phi)) {}
+		Rotator(double phi) : c(cos(phi)), s(sin(phi)) {}
 
-		Point operator()(Point const& P) const { return { c*P.x - s * P.y, P.x*s + c * P.y }; }
+		Point operator()(Point const& P) const { return { c * P.x - s * P.y, s * P.x + c * P.y }; }
 		double phi() const { return acos(c); }
 	};
 
@@ -44,7 +44,7 @@ namespace JH
 		double width() const { return bottomRight.x - topLeft.x; }
 		double height() const { return bottomRight.y - topLeft.y; }
 	private:
-		const Point topLeft,bottomRight;
+		const Point topLeft, bottomRight;
 	};
 
 	struct Rectangle
@@ -59,16 +59,13 @@ namespace JH
 			Rectangle(P + (P - Q)*0.5, 0.5*std::abs(P.x - Q.x), 0.5*std::abs(P.y - Q.y), phi) { }
 		bool contains(Point const& Q) const
 		{
-			auto P = rotate(Center - Q);
-			auto dx = P.x / radiusX;
-			auto dy = P.y / radiusY;
-			return std::abs(dx) <= 1.0 && std::abs(dy) <= 1.0;
+			auto P = rotate(Center - Q) * Point { 1.0 / radiusX, 1.0 / radiusY };
+			return std::abs(P.x) <= 1.0 && std::abs(P.y) <= 1.0;
 		}
-		Rectangle box() 
+		Rectangle box()
 		{
-			auto phi = rotate.phi();
 			auto d = std::hypot(radiusX, radiusY);
-			return Rectangle(Center, d*cos(phi), d*sin(phi));
+			return Rectangle(Center, d*rotate.c, d*rotate.s);
 		}
 	};
 	struct Circle
@@ -79,9 +76,9 @@ namespace JH
 		Circle() = delete;
 		Circle(Point const& Q, double r) : Center(Q), radiusSqr(r*r) { if (r <= 0.0) throw "invalid radius"; }
 
-		bool contains(Point const& Q) const	{return (Center-Q).distSqr() <= radiusSqr;}
+		bool contains(Point const& Q) const { return (Center - Q).distSqr() <= radiusSqr; }
 		double radius() const { return sqrt(radiusSqr); }
-		Rectangle box() const {auto r = radius();	return Rectangle(Center, r,r);}
+		Rectangle box() const { auto r = radius();	return Rectangle(Center, r, r); }
 	};
 
 	struct Ellipse
@@ -91,18 +88,17 @@ namespace JH
 		const Point Center;
 
 		Ellipse() = delete;
-		Ellipse(Point const& Q, double ra, double rb, double phi=-pi<>/4.0) : Center(Q), radiusX(ra), radiusY(rb), rotate(phi) { if (radiusX <= 0.0 || radiusY <= 0.0) throw "invalid radii"; }
+		Ellipse(Point const& Q, double rx, double ry, double phi = -pi<> / 4.0) : Center(Q), radiusX(rx), radiusY(ry), rotate(phi) { if (radiusX <= 0.0 || radiusY <= 0.0) throw "invalid radii"; }
 
 		bool contains(Point const& Q) const
 		{
-			auto P = rotate(Center -Q);
-			return P.stretch(1.0/radiusX, 1.0/radiusY).dist() <= 1.0;
+			auto P = rotate(Center - Q)* Point { 1.0 / radiusX, 1.0 / radiusY };
+			return P.distSqr() <= 1.0;
 		}
 		Rectangle box()
 		{
-			auto phi = rotate.phi();
 			auto d = std::hypot(radiusX, radiusY);
-			return Rectangle(Center, d*cos(phi), d*sin(phi));
+			return Rectangle(Center, d*rotate.c, d*rotate.s);
 		}
 	};
 
