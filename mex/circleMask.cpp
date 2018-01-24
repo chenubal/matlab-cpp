@@ -1,7 +1,6 @@
-#include <math.h>
-#include "mex.h"
-#include <sstream>
+#include "ml_tools.h"
 #include "geometry.h"
+#include <sstream>
 
 bool checkArgs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 {
@@ -30,13 +29,14 @@ bool checkArgs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 {
+	using JH::NumericValue;
 	if (!checkArgs(nlhs, plhs, nrhs, prhs)) return;
 	// Create boolean 2D array
-	mwSize dims[2] = { mwSize(mxGetPr(prhs[0])[0]), mwSize(mxGetPr(prhs[1])[0]) };
+	mwSize dims[2] = { NumericValue<mwSize>(prhs[0]), NumericValue<mwSize>(prhs[1]) };
 	plhs[0] = mxCreateNumericArray(2, dims, mxLOGICAL_CLASS, mxREAL);
 	// Compile calculation data
-	JH::Point center{ mxGetPr(prhs[2])[0] - 1, mxGetPr(prhs[3])[0] - 1 };
-	double radius = mxGetPr(prhs[4])[0];
+	JH::Point center{ NumericValue<>(prhs[2]) - 1, NumericValue<>(prhs[3]) - 1 };
+	double radius = NumericValue<>(prhs[4]);
 	bool *data = (bool*)mxGetData(plhs[0]);
 	JH::Circle circle(center, radius);
 	// Calculate make values by location

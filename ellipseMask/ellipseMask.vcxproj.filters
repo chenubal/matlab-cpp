@@ -8,5 +8,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\mex\geometry.h" />
+    <ClInclude Include="..\mex\ml_tools.h" />
   </ItemGroup>
 </Project>

@@ -1,36 +1,21 @@
-#include <math.h>
-#include "mex.h"
 #include "geometry.h"
-#include <vector>
-
-namespace JH
-{
-	template<class T>
-	struct arrayProxy
-	{
-		arrayProxy() = delete;
-		arrayProxy(T* pData, size_t n) : data(pData), size(n) {}
-		T* begin() { return data; }
-		T* end() { return data+size; }
-		T *data;
-		size_t size;
-	};
-	template<class T > 
-	arrayProxy<T> makeProxy(T* pData, size_t n) { return arrayProxy<T>((T*)pData, n); }
-
-	template<class T = double, int M = 0>
-	T CellValue(mxArray const* pArray, mwSize n) { return T(mxGetPr(mxGetCell(pArray, n))[M]); }
-
-	template<class T = double, int M = 0>
-	T NumericValue(mxArray const* pArray) { return T(mxGetPr(pArray)[M]); }
-}
+#include "ml_tools.h"
+#include <sstream>
 
 mxArray* checkArgs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 {
 	using JH::CellValue;
 	mxArray *result = nullptr;
-	std::vector<JH::Point> ps;
-	ps.push_back({ 10,20 });
+	auto fname = mexFunctionName();
+	if (nrhs == 0)
+	{
+		std::stringstream ss("Function");
+		ss << "Function " << fname << "(from " << __DATE__ << ")\n";
+		ss << "Usage: A=" << fname <<"(Size,Center,Radii); where Size, Center and Radii are 2x1 cells\n"
+		   << "Example: A=" << fname << "({300,400},{100,100},{10,5});\n";
+		mexPrintf(ss.str().c_str());
+		return false;
+	}
 	if (nrhs >= 3)
 	{
 		auto const S = prhs[0];
@@ -71,11 +56,5 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 			i++;
 		}
 		plhs[0] = work;
-	}
-	else
-	{
-		auto fname = mexFunctionName();
-		mexPrintf("Usage: A=%s(Size,Center,Radii); where Size, Center and Radii are 2x1 cells\n"\
-			       "Example: A=%s({300,400},{100,100},{10,5});\n", fname,fname);
 	}
 }
