@@ -19,13 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ellipseMask.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Makefile.win" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Tools\geometry.h" />
+    <ClCompile Include="..\mex\ellipseMask.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\mex\geometry.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9d3c7fb5-0018-482a-8a5f-c0fc58e3453b}</ProjectGuid>

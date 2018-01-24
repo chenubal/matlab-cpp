@@ -4,9 +4,9 @@
     <None Include="Makefile.win" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ellipseMask.cpp" />
+    <ClCompile Include="..\mex\ellipseMask.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Tools\geometry.h" />
+    <ClInclude Include="..\mex\geometry.h" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 #include <math.h>
 #include "mex.h"
 #include <sstream>
-#include "../Tools/geometry.h"
+#include "geometry.h"
 
 bool checkArgs(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 {

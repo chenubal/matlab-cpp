@@ -1,6 +1,6 @@
 #include <math.h>
 #include "mex.h"
-#include "../Tools/geometry.h"
+#include "geometry.h"
 #include <vector>
 
 namespace JH
