@@ -3,6 +3,23 @@
 
 namespace JH
 {
+    template <typename T>
+	struct optional
+	{
+		optional() : value{}, state(false) {}
+		optional(optional const&) = default;
+		optional(optional &&) = default;
+		template<typename S = T>
+		optional(S d) : value{ T(d) }, state(true) {}
+
+		template<typename S = T>
+		void set(S d) { value = T(d); state = true; }
+		operator bool() const { return state; }
+
+		T value;
+		bool state;
+	};
+    
 	template<class T>
 	struct arrayProxy
 	{
